@@ -410,7 +410,7 @@ data/
 
 **Success Criteria:**
 
-- [x] HTTPS URL works (Render Blueprint after push — see README)
+- [ ] HTTPS URL works (Blueprint ready — apply: https://dashboard.render.com/blueprint/new?repo=https://github.com/Procoder1234556/common-name)
 - [x] Health/index ready (`GET /api/health`)
 - [x] No scrape jobs in deploy scripts (`render.yaml` / `Dockerfile` bake fixtures only)
 
