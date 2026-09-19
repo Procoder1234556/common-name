@@ -9,7 +9,7 @@ test.describe("home check smoke", () => {
     await expect(page.getByText("Common Name").first()).toBeVisible();
     await expect(
       page.getByRole("heading", {
-        name: /see how unique your company name/i,
+        name: /check how unique your company name/i,
       }),
     ).toBeVisible();
 

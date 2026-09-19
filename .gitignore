@@ -54,6 +54,8 @@ yarn-error.log*
 *.sqlite-journal
 *.sqlite-wal
 *.sqlite-shm
+# Baked OGD seed for Render disk bootstrap (Goa Mar 2015 sample)
+!/data/companies.sqlite.seed
 
 # Local tool clones (not part of the app deploy unit)
 /awesome-cursorrules/
@@ -61,3 +63,5 @@ yarn-error.log*
 /ui-ux-pro-max-skill/
 /design-system/
 /prompts-directory/
+.firecrawl/
+.agents/

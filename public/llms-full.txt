@@ -1,0 +1,52 @@
+# Common Name — full context for AI systems
+
+## Product
+
+Common Name is a web utility that gives founders, company secretaries, and incorporation advisors a fast, transparent signal of how common or unique a proposed Indian company name is. It compares the query against a local SQLite index built from MCA Company Master open data published on data.gov.in.
+
+Tagline: How unique is this company name in India’s MCA register?
+
+## What it is / is not
+
+- **Is:** A point-in-time uniqueness signal with exact and similar registered-name matches (CIN + name + optional status).
+- **Is not:** MCA name reservation, SPICe+ approval, a live MCA API, or a scrape of the MCA portal.
+- Always verify on the official MCA portal before filing.
+
+## Data & privacy
+
+- Source: Company Master Data (OGD) on data.gov.in.
+- Ingest is gated: requires `CONFIRM_OGD_DOWNLOAD=yes` plus download URL, or `OGD_LOCAL_PATH`.
+- Schema is name-only: CIN, registered name, optional status/class/state. No director/PII columns.
+- Fail-closed: empty company index returns INDEX_UNAVAILABLE (HTTP 503) — never a fake LIKELY_UNIQUE.
+
+## How a check works (user-facing)
+
+1. User submits a proposed company name.
+2. Server normalizes the name, rate-limits, and matches against the local index.
+3. Response includes a clear uniqueness signal and closest matches (or empty-match state).
+4. UI links to official MCA verification and disclaims snapshot vs live authority.
+
+## Primary user questions this product answers
+
+1. How do I check if a company name is available in India?
+2. Is this tool the same as MCA name approval?
+3. What data does it use?
+4. Does it store director or personal data?
+5. What does “likely unique” mean?
+
+Answers: see the FAQ on the homepage and About page; JSON-LD FAQPage schema is embedded for extractability.
+
+## Key URLs
+
+- Home: /
+- About: /about
+- Health: /api/health
+- Check API: POST /api/check (not for indexing; disallowed in robots.txt)
+- Agent summary: /llms.txt
+- This file: /llms-full.txt
+
+## Citation-friendly facts
+
+- Target latency: uniqueness signal within 3 seconds (p95) against a warm local snapshot.
+- Compliance posture: zero MCA portal scraping; zero director/shareholder personal data in schema/UI.
+- Authority: MCA live search and SPICe+ remain authoritative; Common Name is a complement for ideation and shortlisting.

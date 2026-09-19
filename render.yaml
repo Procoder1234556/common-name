@@ -1,7 +1,7 @@
 # Common Name — Render Blueprint (Phase 6+)
 # Paid plan + persistent disk for OGD SQLite (Context7: free has no disks).
-# Build never scrapes MCA; never downloads OGD without operator gate.
-# Place companies.sqlite on /var/data after gated ingest (keep .bak).
+# Build: ingest public Goa OGD fixture + bake seed; start copies seed onto empty disk.
+# Never scrapes MCA. Full nationwide OGD: operator uploads larger sqlite to /var/data.
 
 services:
   - type: web
@@ -10,7 +10,7 @@ services:
     plan: starter
     region: oregon
     healthCheckPath: /api/health
-    buildCommand: HUSKY=0 pnpm install --frozen-lockfile && pnpm build
+    buildCommand: HUSKY=0 pnpm install --frozen-lockfile && pnpm db:ogd-goa && pnpm db:seed-artifact && pnpm build
     startCommand: pnpm start
     disk:
       name: company-index
@@ -27,6 +27,8 @@ services:
         value: sqljs
       - key: COMPANIES_DB_PATH
         value: /var/data/companies.sqlite
+      - key: COMPANIES_DB_SEED
+        value: ./data/companies.sqlite.seed
       - key: RATE_LIMIT_WINDOW_MS
         value: "900000"
       - key: RATE_LIMIT_MAX

@@ -10,9 +10,8 @@ RUN pnpm install --frozen-lockfile
 FROM deps AS build
 WORKDIR /app
 COPY . .
-# Build only — never download OGD / never scrape MCA in image build.
-# Production SQLite lives on Render disk (/var/data) after gated ingest.
-RUN pnpm build
+# Build bakes public Goa OGD fixture into companies.sqlite.seed (not MCA scrape).
+RUN pnpm db:ogd-goa && pnpm db:seed-artifact && pnpm build
 
 FROM node:22.14-bookworm-slim AS runner
 WORKDIR /app

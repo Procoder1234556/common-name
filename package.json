@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start -H 0.0.0.0",
-    "deploy:prepare": "pnpm db:fixture && pnpm build",
+    "start": "tsx scripts/ensure-db-seed.ts && next start -H 0.0.0.0",
+    "deploy:prepare": "pnpm db:ogd-goa && pnpm db:seed-artifact && pnpm build",
+    "db:ogd-goa": "tsx scripts/ingest-ogd-goa.ts",
+    "db:seed-artifact": "tsx scripts/write-seed-artifact.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",

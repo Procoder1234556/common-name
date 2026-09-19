@@ -1,0 +1,29 @@
+# Common Name
+
+> Fast uniqueness signal for proposed Indian company names against an official MCA Company Master open-data snapshot.
+
+Common Name helps founders, company secretaries, and incorporation advisors see how common or unique a proposed company name is in India’s register — before paying time or fees on SPICe+ / name reservation.
+
+## Important
+
+- Snapshot uniqueness signal only — **not** MCA live search or SPICe+ approval
+- Data source: Company Master Data on data.gov.in (MCA open government data)
+- Never scrapes the MCA portal
+- Name-only index: no directors, DIN, emails, phones, or personal addresses
+- Empty index fails closed (never fakes “likely unique”)
+
+## Pages
+
+- [Home — check a name](/): Primary name-check tool
+- [About — how it works](/about): Data source, name-only policy, snapshot vs MCA authority
+- [Full agent context](/llms-full.txt): Longer product summary for AI systems
+
+## Official sources
+
+- [MCA portal](https://www.mca.gov.in/): Authoritative verification and filing
+- [Company Master Data (data.gov.in)](https://data.gov.in/catalog/company-master-data): Open government dataset used for the index
+
+## Optional
+
+- [Sitemap](/sitemap.xml)
+- [Robots](/robots.txt)

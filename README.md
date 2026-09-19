@@ -4,7 +4,7 @@ Check proposed Indian company names against a **local Company Master snapshot** 
 
 ## Status
 
-**Phase 6+:** https://common-name.onrender.com — 404 page, mobile touch targets, stronger disclaimer. Check path: response cache → OGD SQLite → MCA deep-link (never server-fetch MCA). Local OGD ingest: Goa Company Master CSV (**7,353** real names, Mar 2015). Full nationwide dump needs browser login + state “Preview & Download” on [data.gov.in](https://www.data.gov.in/resource/registrars-companies-roc-wise-company-master-data). `render.yaml`: starter + `/var/data` disk; **no** fixture bake / **no** MCA scrape.
+**Phase 6+:** https://common-name.onrender.com — cache → OGD SQLite → MCA deep-link. Build bakes public **Goa** Company Master OGD (**~7.3k** names) into `companies.sqlite.seed`; start copies seed onto empty Render disk (`/var/data`). 404 + mobile + disclaimer shipped. Full nationwide RoC dump: browser download per state on data.gov.in, then replace disk SQLite.
 
 ## Prerequisites
 
