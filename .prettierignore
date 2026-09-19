@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+coverage
+data/companies.sqlite
+data/raw
+pnpm-lock.yaml
+awesome-cursorrules
+context7
+prompts-directory
+ui-ux-pro-max-skill

@@ -1,0 +1,37 @@
+# Common Name — Render Blueprint (Phase 6)
+# https://render.com/docs/blueprint-spec
+#
+# Staging: build bakes fixture SQLite (no OGD download / no MCA scrape).
+# Production OGD: attach a disk, set COMPANIES_DB_PATH to the mount, run
+# gated `pnpm db:ingest` offline, then redeploy — keep companies.sqlite.bak.
+
+services:
+  - type: web
+    name: common-name
+    runtime: node
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    buildCommand: HUSKY=0 pnpm install --frozen-lockfile && pnpm db:fixture && pnpm build
+    startCommand: pnpm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22.14.0"
+      - key: NODE_ENV
+        value: production
+      - key: CONFIRM_OGD_DOWNLOAD
+        value: "no"
+      - key: COMPANIES_DB_DRIVER
+        value: sqljs
+      - key: COMPANIES_DB_PATH
+        value: ./data/companies.sqlite
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "900000"
+      - key: RATE_LIMIT_MAX
+        value: "30"
+      - key: NEXT_PUBLIC_MCA_VERIFY_URL
+        value: https://www.mca.gov.in/
+      - key: NEXT_PUBLIC_OGD_CATALOG_URL
+        value: https://data.gov.in/catalog/company-master-data
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false

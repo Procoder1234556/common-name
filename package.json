@@ -1,0 +1,79 @@
+{
+  "name": "common-name",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start -H 0.0.0.0",
+    "deploy:prepare": "pnpm db:fixture && pnpm build",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "db:fixture": "tsx scripts/load-fixtures.ts",
+    "db:ingest": "tsx scripts/ingest-ogd.ts",
+    "db:bench": "tsx scripts/bench-check.ts",
+    "db:gen-ogd-sample": "tsx scripts/gen-ogd-sample.ts",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "5.9.1",
+    "better-sqlite3": "13.0.3",
+    "clsx": "2.1.1",
+    "fflate": "0.8.3",
+    "fuse.js": "7.5.0",
+    "lucide-react": "1.47.0",
+    "next": "16.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-hook-form": "7.88.0",
+    "sql.js": "1.13.0",
+    "tailwind-merge": "3.7.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/better-sqlite3": "9.6.0",
+    "@types/node": "22.20.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/sql.js": "^1.4.11",
+    "@vitest/coverage-v8": "5.0.1",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.5",
+    "husky": "9.1.7",
+    "lint-staged": "15.5.2",
+    "playwright": "1.63.0",
+    "postcss": "8.5.28",
+    "prettier": "3.9.8",
+    "prettier-plugin-tailwindcss": "0.6.14",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3",
+    "vite": "6.4.3",
+    "vitest": "5.0.1"
+  },
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": ">=22.11.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,mjs}": [
+      "prettier --write"
+    ]
+  }
+}

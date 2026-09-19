@@ -1,0 +1,20 @@
+# Build context exclusions for optional Docker deploys
+.git
+.github
+.next
+node_modules
+coverage
+playwright-report
+test-results
+.env
+.env*.local
+awesome-cursorrules
+context7
+ui-ux-pro-max-skill
+design-system
+prompts-directory
+data/raw
+data/companies.sqlite
+data/companies.sqlite.bak
+*.md
+!README.md

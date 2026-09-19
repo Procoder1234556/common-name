@@ -1,0 +1,266 @@
+[
+  {
+    "cin": "U72900KA2015PTC000001",
+    "name": "ACME Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Karnataka",
+    "registered_on": "2015-03-12"
+  },
+  {
+    "cin": "U72900KA2016PTC000002",
+    "name": "ACME PVT LTD",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Karnataka",
+    "registered_on": "2016-01-08"
+  },
+  {
+    "cin": "U72900KA2017PTC000003",
+    "name": "Acme Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Karnataka",
+    "registered_on": "2017-06-21"
+  },
+  {
+    "cin": "U72200MH2018PTC000004",
+    "name": "Tekno Solutions Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Maharashtra",
+    "registered_on": "2018-04-02"
+  },
+  {
+    "cin": "U72200MH2019PTC000005",
+    "name": "Techno Solutions Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Maharashtra",
+    "registered_on": "2019-09-15"
+  },
+  {
+    "cin": "U74999DL2020PTC000006",
+    "name": "Zephyr Quill Analytics Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Delhi",
+    "registered_on": "2020-02-11"
+  },
+  {
+    "cin": "U74999GJ2021PTC000007",
+    "name": "Nimbus Lattice Works Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Gujarat",
+    "registered_on": "2021-07-30"
+  },
+  {
+    "cin": "U62013TN2022PTC000008",
+    "name": "Copper Finch Systems Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Tamil Nadu",
+    "registered_on": "2022-11-03"
+  },
+  {
+    "cin": "U62013WB2014PTC000009",
+    "name": "Maple Drift Consulting Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "West Bengal",
+    "registered_on": "2014-05-19"
+  },
+  {
+    "cin": "U62013RJ2013PTC000010",
+    "name": "Orchid Vault Software Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Rajasthan",
+    "registered_on": "2013-08-27"
+  },
+  {
+    "cin": "U62013UP2012PTC000011",
+    "name": "Silver Fern Logistics Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Uttar Pradesh",
+    "registered_on": "2012-12-01"
+  },
+  {
+    "cin": "U62013HR2011PTC000012",
+    "name": "Amber Ridge Foods Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Haryana",
+    "registered_on": "2011-03-14"
+  },
+  {
+    "cin": "U62013PB2010PTC000013",
+    "name": "Cedar Peak Apparel Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Punjab",
+    "registered_on": "2010-10-22"
+  },
+  {
+    "cin": "U62013KL2009PTC000014",
+    "name": "Indigo Harbor Marine Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Kerala",
+    "registered_on": "2009-01-09"
+  },
+  {
+    "cin": "U62013AP2008PTC000015",
+    "name": "Granite Sparrow Media Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Andhra Pradesh",
+    "registered_on": "2008-06-18"
+  },
+  {
+    "cin": "U62013TS2007PTC000016",
+    "name": "Willow Circuit Labs Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Telangana",
+    "registered_on": "2007-09-05"
+  },
+  {
+    "cin": "U62013MP2006PTC000017",
+    "name": "Saffron Mesa Trading Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Madhya Pradesh",
+    "registered_on": "2006-04-28"
+  },
+  {
+    "cin": "U62013CG2005PTC000018",
+    "name": "Pine Compass Education Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Chhattisgarh",
+    "registered_on": "2005-11-16"
+  },
+  {
+    "cin": "U62013OR2004PTC000019",
+    "name": "Velvet Anchor Health Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Odisha",
+    "registered_on": "2004-02-07"
+  },
+  {
+    "cin": "U62013BR2003PTC000020",
+    "name": "Cobalt Meadow Energy Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Bihar",
+    "registered_on": "2003-07-25"
+  },
+  {
+    "cin": "U62013JH2002PTC000021",
+    "name": "Ivory Lantern Retail Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Jharkhand",
+    "registered_on": "2002-12-13"
+  },
+  {
+    "cin": "U62013AS2001PTC000022",
+    "name": "Quartz Bloom Agro Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Assam",
+    "registered_on": "2001-05-31"
+  },
+  {
+    "cin": "U62013UK2000PTC000023",
+    "name": "Ember Hollow Design Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Uttarakhand",
+    "registered_on": "2000-08-08"
+  },
+  {
+    "cin": "U62013HP1999PTC000024",
+    "name": "Northwind Parcel Services Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Himachal Pradesh",
+    "registered_on": "1999-03-20"
+  },
+  {
+    "cin": "U62013GA1998PTC000025",
+    "name": "Coral Byte Networks Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Goa",
+    "registered_on": "1998-10-04"
+  },
+  {
+    "cin": "AAB-1001",
+    "name": "Horizon Quill Advisors LLP",
+    "status": "Active",
+    "company_class": "LLP",
+    "state": "Maharashtra",
+    "registered_on": "2016-05-12"
+  },
+  {
+    "cin": "U74999DL2017OPC000026",
+    "name": "Lone Oak Studio OPC Private Limited",
+    "status": "Active",
+    "company_class": "OPC",
+    "state": "Delhi",
+    "registered_on": "2017-01-19"
+  },
+  {
+    "cin": "U74999MH2015PTC000027",
+    "name": "Brightwave Technologies Private Limited",
+    "status": "Strike Off",
+    "company_class": "Private",
+    "state": "Maharashtra",
+    "registered_on": "2015-09-09"
+  },
+  {
+    "cin": "U74999KA2014PTC000028",
+    "name": "Bright Wave Technologies Pvt. Ltd.",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Karnataka",
+    "registered_on": "2014-11-28"
+  },
+  {
+    "cin": "U74999TN2013PTC000029",
+    "name": "Sundara Spice Exports Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Tamil Nadu",
+    "registered_on": "2013-02-14"
+  },
+  {
+    "cin": "U74999GJ2012PTC000030",
+    "name": "Kite & Loom Crafts Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Gujarat",
+    "registered_on": "2012-06-06"
+  },
+  {
+    "cin": "U74999WB2011PTC000031",
+    "name": "Riverstone Optics Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "West Bengal",
+    "registered_on": "2011-08-17"
+  },
+  {
+    "cin": "U74999RJ2010PTC000032",
+    "name": "Dusty Compass Trails Private Limited",
+    "status": "Active",
+    "company_class": "Private",
+    "state": "Rajasthan",
+    "registered_on": "2010-04-23"
+  }
+]
