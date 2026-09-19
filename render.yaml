@@ -24,7 +24,7 @@ services:
       - key: CONFIRM_OGD_DOWNLOAD
         value: "no"
       - key: COMPANIES_DB_DRIVER
-        value: sqljs
+        value: better-sqlite3
       - key: COMPANIES_DB_PATH
         value: /var/data/companies.sqlite
       - key: COMPANIES_DB_SEED
@@ -34,7 +34,7 @@ services:
       - key: RATE_LIMIT_MAX
         value: "30"
       - key: NEXT_PUBLIC_MCA_VERIFY_URL
-        value: https://www.mca.gov.in/
+        value: https://www.mca.gov.in/content/mca/global/en/mca/fo-llp-services/company-llp-name-search.html
       - key: NEXT_PUBLIC_OGD_CATALOG_URL
         value: https://data.gov.in/catalog/company-master-data
       - key: NEXT_PUBLIC_APP_URL

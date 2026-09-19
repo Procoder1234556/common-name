@@ -24,20 +24,21 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Scripts
 
-| Script                      | Purpose                                                                                               |
-| --------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `pnpm dev`                  | Next.js + Turbopack                                                                                   |
-| `pnpm build` / `pnpm start` | Production build; bind `0.0.0.0` (Render sets `PORT`)                                                 |
-| `pnpm deploy:prepare`       | Fixture bake + build (same as Render build, local)                                                    |
-| `pnpm type-check`           | `tsc --noEmit`                                                                                        |
-| `pnpm lint`                 | ESLint                                                                                                |
-| `pnpm test`                 | Vitest (normalize, match, API, ingest, health)                                                        |
-| `pnpm test:coverage`        | Vitest + ≥80% gate on `lib/normalize` + `lib/match`                                                   |
-| `pnpm test:e2e`             | Playwright smoke (fixtures → home → signal + MCA)                                                     |
-| `pnpm db:fixture`           | Load synthetic companies into `data/companies.sqlite`                                                 |
-| `pnpm db:ingest`            | OGD ingest — **refuses** unless `CONFIRM_OGD_DOWNLOAD=yes` (+ `OGD_DOWNLOAD_URL`) or `OGD_LOCAL_PATH` |
-| `pnpm db:bench`             | Warm-index match latency (target p95 &lt; 3s)                                                         |
-| `pnpm db:gen-ogd-sample`    | Regenerate `data/fixtures/ogd-sample.csv`                                                             |
+| Script                      | Purpose                                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `pnpm dev`                  | Next.js + Turbopack                                                                                           |
+| `pnpm build` / `pnpm start` | Production build; bind `0.0.0.0` (Render sets `PORT`)                                                         |
+| `pnpm deploy:prepare`       | Fixture bake + build (same as Render build, local)                                                            |
+| `pnpm type-check`           | `tsc --noEmit`                                                                                                |
+| `pnpm lint`                 | ESLint                                                                                                        |
+| `pnpm test`                 | Vitest (normalize, match, API, ingest, health)                                                                |
+| `pnpm test:coverage`        | Vitest + ≥80% gate on `lib/normalize` + `lib/match`                                                           |
+| `pnpm test:e2e`             | Playwright smoke (fixtures → home → signal + MCA)                                                             |
+| `pnpm db:fixture`           | Load synthetic companies into `data/companies.sqlite`                                                         |
+| `pnpm db:ingest`            | OGD ZIP/CSV ingest — **refuses** unless `CONFIRM_OGD_DOWNLOAD=yes` (+ `OGD_DOWNLOAD_URL`) or `OGD_LOCAL_PATH` |
+| `pnpm db:ingest-api`        | Nationwide via official **data.gov.in API** — needs `CONFIRM_OGD_DOWNLOAD=yes` + `DATA_GOV_IN_API_KEY`        |
+| `pnpm db:bench`             | Warm-index match latency (target p95 &lt; 3s)                                                                 |
+| `pnpm db:gen-ogd-sample`    | Regenerate `data/fixtures/ogd-sample.csv`                                                                     |
 
 ### Local sample ingest (no network)
 
@@ -53,10 +54,12 @@ Restart `pnpm dev` after ingest so the sql.js singleton re-reads the DB file.
 ### Confirmed OGD download (required before any network fetch)
 
 1. Set `CONFIRM_OGD_DOWNLOAD=yes`
-2. Set `OGD_DOWNLOAD_URL` to the **direct HTTPS** Company Master ZIP/CSV from data.gov.in (catalog page alone is not enough)
-3. Or set `OGD_LOCAL_PATH` to a file you already obtained under OGD terms
-4. Never scrape the MCA live portal
-5. Keep prior `data/companies.sqlite.bak` for rollback after ingest
+2. **Best (nationwide):** create a free API key at [data.gov.in](https://data.gov.in/) → set `DATA_GOV_IN_API_KEY` → `pnpm db:ingest-api` (optional `OGD_MAX_ROWS=5000` smoke first). Resource id defaults to RoC-wise Company Master (`4dbe5667-…`).
+3. Or set `OGD_DOWNLOAD_URL` to a **direct HTTPS** Company Master ZIP/CSV from data.gov.in
+4. Or set `OGD_LOCAL_PATH` to a file you already obtained under OGD terms
+5. Never scrape the MCA live portal — UI “Verify on MCA” deep-links to official FO name search
+6. Keep prior `data/companies.sqlite.bak` for rollback after ingest
+7. After ingest: `pnpm db:seed-artifact` then redeploy / copy SQLite onto Render disk (`/var/data`)
 
 ## Database
 
@@ -79,10 +82,12 @@ Connect GitHub to Render if Dashboard asks (Account → Linked Accounts). Bind: 
 
 ### Production (confirmed index)
 
-- Attach a **persistent disk** (or bake a post-ingest SQLite into the artifact) — Render ephemeral FS wipes local writes on restart
-- Point `COMPANIES_DB_PATH` at the disk mount
-- Run gated ingest offline / on a job with confirm env; keep `.bak` for rollback
+- Attach a **persistent disk** — Render ephemeral FS wipes local writes on restart
+- `COMPANIES_DB_PATH=/var/data/companies.sqlite`; build still bakes Goa seed for first boot
+- `COMPANIES_DB_DRIVER=better-sqlite3` (FTS5/BM25 at runtime)
+- Upload nationwide SQLite after local ingest (see **Free all-India index** above) — skip Supabase
 - Monitor structured JSON logs for `SERVER_ERROR` / `INDEX_UNAVAILABLE` on `/api/check` and `/api/health`
+- `GET /api/health` returns `index.rowCount`, `snapshotLabel`, `snapshotAt` for scope checks
 
 Optional image: `Dockerfile` bakes fixtures the same way (still no OGD/MCA network in build).
 

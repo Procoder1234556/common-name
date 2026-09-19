@@ -53,14 +53,25 @@ describe("ingest gate", () => {
     expect(result.localPath).toBe(path.resolve(file));
   });
 
-  it("requires OGD_DOWNLOAD_URL when confirm=yes", () => {
+  it("requires OGD_DOWNLOAD_URL or DATA_GOV_IN_API_KEY when confirm=yes", () => {
     expect(() =>
       assertIngestAllowed({
         CONFIRM_OGD_DOWNLOAD: "yes",
         OGD_LOCAL_PATH: "",
         OGD_DOWNLOAD_URL: "",
+        DATA_GOV_IN_API_KEY: "",
       }),
-    ).toThrow(/OGD_DOWNLOAD_URL/);
+    ).toThrow(/DATA_GOV_IN_API_KEY|OGD_DOWNLOAD_URL/);
+  });
+
+  it("allows confirm=yes with DATA_GOV_IN_API_KEY (API mode)", () => {
+    const result = assertIngestAllowed({
+      CONFIRM_OGD_DOWNLOAD: "yes",
+      DATA_GOV_IN_API_KEY: "test-key",
+    });
+    expect(result.mode).toBe("api");
+    expect(result.apiKey).toBe("test-key");
+    expect(result.resourceId).toBeTruthy();
   });
 
   it("allows confirm=yes with https download URL", () => {
@@ -69,6 +80,25 @@ describe("ingest gate", () => {
       OGD_DOWNLOAD_URL: "https://example.com/company-master.zip",
     });
     expect(result.mode).toBe("download");
+  });
+});
+
+describe("OGD API record map", () => {
+  it("maps name-level fields and drops empty", async () => {
+    const { mapOgdApiRecord } = await import("@/lib/ingest/ogd-api");
+    const row = mapOgdApiRecord({
+      CIN: "U12345MH2020PTC000001",
+      CompanyName: "Acme Widgets Private Limited",
+      CompanyStatus: "Active",
+      CompanyClass: "Private",
+      CompanyStateCode: "maharashtra",
+      CompanyRegistrationdate_date: "2020-01-15",
+      Registered_Office_Address: "should-not-matter",
+    });
+    expect(row?.cin).toBe("U12345MH2020PTC000001");
+    expect(row?.normalized_name).toContain("acme");
+    expect(row?.state).toBe("maharashtra");
+    expect(mapOgdApiRecord({ CIN: "", CompanyName: "X" })).toBeNull();
   });
 });
 

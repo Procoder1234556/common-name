@@ -118,7 +118,7 @@ export default function RootLayout({
             <a
               href={
                 process.env.NEXT_PUBLIC_MCA_VERIFY_URL ??
-                "https://www.mca.gov.in/"
+                "https://www.mca.gov.in/content/mca/global/en/mca/fo-llp-services/company-llp-name-search.html"
               }
               className="text-primary-700 cursor-pointer font-medium underline-offset-2 hover:underline"
               rel="noopener noreferrer"

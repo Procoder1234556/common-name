@@ -268,7 +268,7 @@ RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX=30
 
 # MCA deep link (official portal entry — update if MCA moves path)
-NEXT_PUBLIC_MCA_VERIFY_URL=https://www.mca.gov.in/
+NEXT_PUBLIC_MCA_VERIFY_URL=https://www.mca.gov.in/content/mca/global/en/mca/fo-llp-services/company-llp-name-search.html
 NEXT_PUBLIC_OGD_CATALOG_URL=https://data.gov.in/catalog/company-master-data
 ```
 

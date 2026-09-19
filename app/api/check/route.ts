@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCachedCheck, setCachedCheck } from "@/lib/check-cache";
-import { getDb } from "@/lib/db";
+import { getDatasetMeta, getDb } from "@/lib/db";
 import {
   DISCLAIMER,
   IndexUnavailableError,
@@ -13,7 +13,8 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { checkNameBodySchema } from "@/lib/schemas/check";
 
 const MCA_VERIFY_URL =
-  process.env.NEXT_PUBLIC_MCA_VERIFY_URL ?? "https://www.mca.gov.in/";
+  process.env.NEXT_PUBLIC_MCA_VERIFY_URL ??
+  "https://www.mca.gov.in/content/mca/global/en/mca/fo-llp-services/company-llp-name-search.html";
 
 interface ApiErrorBody {
   error: {
@@ -53,7 +54,7 @@ function errorJson(
   );
 }
 
-function successJson(outcome: MatchOutcome) {
+function successJson(outcome: MatchOutcome, rowCount?: number) {
   return NextResponse.json({
     query: outcome.query,
     signal: {
@@ -69,6 +70,7 @@ function successJson(outcome: MatchOutcome) {
       sourceUrl: outcome.meta.sourceUrl,
       returned: outcome.meta.returned,
       limit: outcome.meta.limit,
+      ...(rowCount !== undefined ? { rowCount } : {}),
     },
     links: {
       mcaVerify: MCA_VERIFY_URL,
@@ -127,6 +129,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const db = await getDb();
+    const indexRowCount = getDatasetMeta(db)?.row_count;
+
     const cached = getCachedCheck(normalizedPreview);
     if (cached) {
       console.info(
@@ -138,13 +143,15 @@ export async function POST(request: NextRequest) {
           signal: cached.signal.code,
         }),
       );
-      return successJson({
-        ...cached,
-        query: { raw: rawName, normalized: cached.query.normalized },
-      });
+      return successJson(
+        {
+          ...cached,
+          query: { raw: rawName, normalized: cached.query.normalized },
+        },
+        indexRowCount,
+      );
     }
 
-    const db = await getDb();
     const outcome = matchCompanyName(db, rawName);
     setCachedCheck(outcome.query.normalized, outcome);
 
@@ -159,7 +166,7 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    return successJson(outcome);
+    return successJson(outcome, indexRowCount);
   } catch (error) {
     if (error instanceof IndexUnavailableError) {
       console.warn(

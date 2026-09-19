@@ -30,3 +30,14 @@ export {
   type BuildIndexOptions,
   type BuildIndexResult,
 } from "@/lib/ingest/build-db";
+export {
+  buildCompaniesIndexFromApi,
+  type BuildApiIndexOptions,
+  type BuildApiIndexResult,
+} from "@/lib/ingest/build-api-index";
+export {
+  mapOgdApiRecord,
+  fetchOgdApiPage,
+  DEFAULT_OGD_RESOURCE_ID,
+  OGD_API_SOURCE_URL,
+} from "@/lib/ingest/ogd-api";

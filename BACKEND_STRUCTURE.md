@@ -250,7 +250,7 @@ if (!parsed.success) {
     "limit": 20
   },
   "links": {
-    "mcaVerify": "https://www.mca.gov.in/"
+    "mcaVerify": "https://www.mca.gov.in/content/mca/global/en/mca/fo-llp-services/company-llp-name-search.html"
   },
   "disclaimer": "This is a snapshot uniqueness signal. MCA live search and SPICe+ approval are authoritative."
 }
@@ -278,7 +278,9 @@ if (!parsed.success) {
     "returned": 0,
     "limit": 20
   },
-  "links": { "mcaVerify": "https://www.mca.gov.in/" },
+  "links": {
+    "mcaVerify": "https://www.mca.gov.in/content/mca/global/en/mca/fo-llp-services/company-llp-name-search.html"
+  },
   "disclaimer": "This is a snapshot uniqueness signal. MCA live search and SPICe+ approval are authoritative."
 }
 ```

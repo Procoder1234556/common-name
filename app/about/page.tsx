@@ -24,7 +24,8 @@ export default function AboutPage() {
     process.env.NEXT_PUBLIC_OGD_CATALOG_URL ??
     "https://data.gov.in/catalog/company-master-data";
   const mcaUrl =
-    process.env.NEXT_PUBLIC_MCA_VERIFY_URL ?? "https://www.mca.gov.in/";
+    process.env.NEXT_PUBLIC_MCA_VERIFY_URL ??
+    "https://www.mca.gov.in/content/mca/global/en/mca/fo-llp-services/company-llp-name-search.html";
 
   return (
     <>
@@ -77,6 +78,50 @@ export default function AboutPage() {
                 </a>
               </li>
             </ul>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="font-display text-xl font-semibold text-neutral-900">
+              What geographic scope does the index cover?
+            </h2>
+            <p>
+              Checks only cover companies in the{" "}
+              <strong className="font-semibold text-neutral-900">
+                loaded OGD snapshot
+              </strong>
+              . The public Render deploy ships with a{" "}
+              <strong className="font-semibold text-neutral-900">Goa</strong>{" "}
+              Company Master sample (~7k names) until a larger nationwide SQLite
+              file is uploaded to persistent disk.
+            </p>
+            <ul className="list-disc space-y-2 pl-5">
+              <li>
+                <strong className="font-semibold text-neutral-900">
+                  Goa-only
+                </strong>{" "}
+                — baked seed or single-state CSV; misses companies registered in
+                other states.
+              </li>
+              <li>
+                <strong className="font-semibold text-neutral-900">
+                  Multi-state / all-India
+                </strong>{" "}
+                — download state CSVs from data.gov.in in your browser, ingest
+                locally, copy{" "}
+                <code className="font-mono text-sm text-neutral-800">
+                  companies.sqlite
+                </code>{" "}
+                to{" "}
+                <code className="font-mono text-sm text-neutral-800">
+                  /var/data
+                </code>{" "}
+                on Render. No Supabase required.
+              </li>
+            </ul>
+            <p>
+              Result rows show index size and snapshot label. This is never live
+              MCA — only the snapshot you loaded.
+            </p>
           </section>
 
           <section className="space-y-3">

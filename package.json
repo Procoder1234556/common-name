@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "db:fixture": "tsx scripts/load-fixtures.ts",
     "db:ingest": "tsx scripts/ingest-ogd.ts",
+    "db:ingest-api": "tsx scripts/ingest-ogd-api.ts",
     "db:bench": "tsx scripts/bench-check.ts",
     "db:gen-ogd-sample": "tsx scripts/gen-ogd-sample.ts",
     "prepare": "husky"

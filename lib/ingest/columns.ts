@@ -34,6 +34,7 @@ const FIELD_ALIASES: Record<IngestField, string[]> = {
   name: [
     "company name",
     "company_name",
+    "companyname",
     "name of the company",
     "name",
     "llp name",
@@ -42,6 +43,7 @@ const FIELD_ALIASES: Record<IngestField, string[]> = {
   status: [
     "company status",
     "company_status",
+    "companystatus",
     "status",
     "company status(forefill)",
     "llp status",
@@ -49,6 +51,7 @@ const FIELD_ALIASES: Record<IngestField, string[]> = {
   company_class: [
     "company class",
     "company_class",
+    "companyclass",
     "class",
     "class of company",
     "entity class",
@@ -58,6 +61,8 @@ const FIELD_ALIASES: Record<IngestField, string[]> = {
     "registered_state",
     "state",
     "company state",
+    "company state code",
+    "companystatecode",
     "state code",
   ],
   registered_on: [
@@ -66,6 +71,8 @@ const FIELD_ALIASES: Record<IngestField, string[]> = {
     "date of incorporation",
     "date_of_incorporation",
     "registration date",
+    "companyregistrationdate date",
+    "companyregistrationdate_date",
     "incorporated on",
     "registered_on",
   ],
