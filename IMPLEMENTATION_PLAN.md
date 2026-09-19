@@ -410,8 +410,8 @@ data/
 
 **Success Criteria:**
 
-- [ ] HTTPS URL works (Blueprint ready — apply: https://dashboard.render.com/blueprint/new?repo=https://github.com/Procoder1234556/common-name)
-- [x] Health/index ready (`GET /api/health`)
+- [x] HTTPS URL works (https://common-name.onrender.com)
+- [x] Health/index ready (`GET /api/health` → ready, fixtures)
 - [x] No scrape jobs in deploy scripts (`render.yaml` / `Dockerfile` bake fixtures only)
 
 **Reference Docs:** TECH_STACK.md hosting; Render ephemeral FS constraint
