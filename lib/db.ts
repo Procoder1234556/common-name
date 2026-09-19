@@ -112,23 +112,35 @@ export class CompanyDatabase {
     return CompanyDatabase.openSqlJs(dbPath);
   }
 
-  /** Prefer native SQLite for large ingest (FTS5). Falls back to sql.js. */
+  /**
+   * Prefer native SQLite for large ingest (FTS5) when safe.
+   * Skip auto better-sqlite3 on win32 (ACCESS_VIOLATION on some hosts) unless
+   * INGEST_USE_BETTER_SQLITE3=1 or COMPANIES_DB_DRIVER=better-sqlite3 on non-win.
+   */
   static async openForIngest(dbPath = getDbPath()): Promise<CompanyDatabase> {
-    try {
-      return CompanyDatabase.openBetterSqlite3(dbPath);
-    } catch (error) {
-      console.warn(
-        JSON.stringify({
-          level: "warn",
-          code: "INGEST_SQLJS_FALLBACK",
-          message:
-            error instanceof Error
-              ? error.message
-              : "better-sqlite3 unavailable",
-        }),
-      );
-      return CompanyDatabase.openSqlJs(dbPath);
+    const forceNative = process.env.INGEST_USE_BETTER_SQLITE3 === "1";
+    const wantNative =
+      forceNative ||
+      (resolvePreferredDriver() === "better-sqlite3" &&
+        process.platform !== "win32");
+
+    if (wantNative) {
+      try {
+        return CompanyDatabase.openBetterSqlite3(dbPath);
+      } catch (error) {
+        console.warn(
+          JSON.stringify({
+            level: "warn",
+            code: "INGEST_SQLJS_FALLBACK",
+            message:
+              error instanceof Error
+                ? error.message
+                : "better-sqlite3 unavailable",
+          }),
+        );
+      }
     }
+    return CompanyDatabase.openSqlJs(dbPath);
   }
 
   private static openBetterSqlite3(dbPath: string): CompanyDatabase {
@@ -172,6 +184,7 @@ export class CompanyDatabase {
   }
 
   createSchema(): void {
+    // sql.js `run()` executes only the first statement — keep statements separate.
     this.run(`
       CREATE TABLE IF NOT EXISTS dataset_meta (
         id INTEGER PRIMARY KEY CHECK (id = 1),
@@ -183,8 +196,9 @@ export class CompanyDatabase {
         row_count INTEGER NOT NULL CHECK (row_count >= 0),
         checksum_sha256 TEXT,
         notes TEXT
-      );
-
+      )
+    `);
+    this.run(`
       CREATE TABLE IF NOT EXISTS companies (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         cin TEXT NOT NULL UNIQUE,
@@ -196,13 +210,15 @@ export class CompanyDatabase {
         registered_on TEXT,
         created_at TEXT NOT NULL DEFAULT (datetime('now')),
         updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-      );
-
+      )
+    `);
+    this.run(`
       CREATE UNIQUE INDEX IF NOT EXISTS idx_companies_cin
-        ON companies (cin);
-
+        ON companies (cin)
+    `);
+    this.run(`
       CREATE INDEX IF NOT EXISTS idx_companies_normalized_name
-        ON companies (normalized_name);
+        ON companies (normalized_name)
     `);
     this.ensureFts();
   }
@@ -419,6 +435,11 @@ export class CompanyDatabase {
         return;
       }
       this.backend.db.prepare(sql).run(...params);
+      return;
+    }
+    // sql.js: omit bind args when empty — [] breaks multi-statement CREATE SCHEMA.
+    if (params.length === 0) {
+      this.backend.db.run(sql);
       return;
     }
     this.backend.db.run(sql, params as SqlJsValue[]);
