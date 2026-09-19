@@ -1,10 +1,13 @@
 /**
  * Exact + fuzzy company-name matching (BACKEND_STRUCTURE.md §5).
  *
+ * Pipeline (Arpit-style IR): exact B-tree → FTS5 inverted index + BM25 rank →
+ * Fuse/Levenshtein/phonetic typo band on that small candidate set.
+ *
  * Constants (documented for tuning):
  * - FUSE_THRESHOLD 0.4 — Fuse keeps results with score ≤ 0.4 (0 = perfect)
  * - MIN_SIMILARITY 0.6 — inverted Fuse / Levenshtein floor for similar band
- * - CANDIDATE_LIMIT 500 — SQL prefilter cap before Fuse
+ * - CANDIDATE_LIMIT 500 — FTS/LIKE prefilter cap before typo band
  * - MATCH_LIMIT 20 — response cap
  */
 
@@ -60,6 +63,7 @@ export interface MatchOutcome {
     returned: number;
     limit: number;
     totalSimilar: number;
+    rowCount: number;
   };
   disclaimer: string;
 }
@@ -128,6 +132,10 @@ export function buildFtsMatchQuery(tokens: string[]): string {
     .join(" OR ");
 }
 
+/**
+ * FTS5 candidate prefilter ranked by BM25 (`bm25()` — lower is better).
+ * Returns null when FTS unavailable so caller can fall back to LIKE.
+ */
 function findCandidatesViaFts(
   db: CompanyDatabase,
   tokens: string[],
@@ -141,18 +149,35 @@ function findCandidatesViaFts(
     const rows = db.exec(
       `
       SELECT c.id, c.cin, c.name, c.normalized_name, c.status, c.company_class,
-             c.state, c.registered_on, c.created_at, c.updated_at
+             c.state, c.registered_on, c.created_at, c.updated_at,
+             bm25(companies_fts) AS bm25_rank
       FROM companies_fts
       JOIN companies c ON c.id = companies_fts.rowid
       WHERE companies_fts MATCH ?
-      ORDER BY c.name ASC
+      ORDER BY bm25_rank ASC, c.name ASC
       LIMIT ?
       `,
       [matchQuery, limit],
     );
     return rows.map(rowFromExec);
   } catch {
-    return null;
+    try {
+      const rows = db.exec(
+        `
+        SELECT c.id, c.cin, c.name, c.normalized_name, c.status, c.company_class,
+               c.state, c.registered_on, c.created_at, c.updated_at
+        FROM companies_fts
+        JOIN companies c ON c.id = companies_fts.rowid
+        WHERE companies_fts MATCH ?
+        ORDER BY c.name ASC
+        LIMIT ?
+        `,
+        [matchQuery, limit],
+      );
+      return rows.map(rowFromExec);
+    } catch {
+      return null;
+    }
   }
 }
 
@@ -365,6 +390,7 @@ export function matchCompanyName(
   const exactRows = findExactMatches(db, normalized);
   const exactCins = new Set(exactRows.map((row) => row.cin));
 
+  // FTS5 BM25-ordered candidates (or LIKE fallback); typo band below.
   const candidates = findCandidateMatches(db, normalized).filter(
     (row) => !exactCins.has(row.cin),
   );
@@ -382,8 +408,19 @@ export function matchCompanyName(
   const fuseHits = fuse.search(normalized);
   const scoredByCin = new Map<string, { row: CompanyRow; score: number }>();
 
+  // Preserve BM25 candidate order as a soft prior: earlier FTS hits get a tiny boost.
+  const ftsOrderBonus = new Map<string, number>();
+  candidates.forEach((row, index) => {
+    const bonus = Math.max(
+      0,
+      0.05 * (1 - index / Math.max(candidates.length, 1)),
+    );
+    ftsOrderBonus.set(row.cin, bonus);
+  });
+
   for (const hit of fuseHits) {
-    const score = scoreSimilarity(normalized, hit.item, hit.score);
+    let score = scoreSimilarity(normalized, hit.item, hit.score);
+    score = Math.min(1, score + (ftsOrderBonus.get(hit.item.cin) ?? 0));
     if (score < MIN_SIMILARITY) continue;
     scoredByCin.set(hit.item.cin, { row: hit.item, score });
   }
@@ -391,7 +428,8 @@ export function matchCompanyName(
   // Catch near-misses Fuse threshold dropped (e.g. Tekno ↔ Techno on small lists).
   for (const row of candidates) {
     if (scoredByCin.has(row.cin)) continue;
-    const score = scoreSimilarity(normalized, row, undefined);
+    let score = scoreSimilarity(normalized, row, undefined);
+    score = Math.min(1, score + (ftsOrderBonus.get(row.cin) ?? 0));
     if (score >= MIN_SIMILARITY) {
       scoredByCin.set(row.cin, { row, score });
     }
@@ -423,6 +461,7 @@ export function matchCompanyName(
       returned: combined.length,
       limit: MATCH_LIMIT,
       totalSimilar,
+      rowCount: meta.row_count,
     },
     disclaimer: DISCLAIMER,
   };

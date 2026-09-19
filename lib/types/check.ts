@@ -29,6 +29,8 @@ export interface CheckSuccessDto {
     sourceUrl: string;
     returned: number;
     limit: number;
+    /** Companies in loaded snapshot (from dataset_meta.row_count). */
+    rowCount?: number;
   };
   links: { mcaVerify: string };
   disclaimer: string;

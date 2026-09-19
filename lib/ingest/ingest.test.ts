@@ -11,6 +11,7 @@ import {
   parseCompaniesCsv,
   parseCsv,
   buildCompaniesIndex,
+  mergeParsedCompanies,
   selectCsvEntriesFromZip,
 } from "@/lib/ingest";
 import { openDb, closeDb } from "@/lib/db";
@@ -37,6 +38,7 @@ describe("ingest gate", () => {
       assertIngestAllowed({
         CONFIRM_OGD_DOWNLOAD: "no",
         OGD_LOCAL_PATH: "",
+        OGD_LOCAL_DIR: "",
       }),
     ).toThrow(IngestGateError);
   });
@@ -53,11 +55,22 @@ describe("ingest gate", () => {
     expect(result.localPath).toBe(path.resolve(file));
   });
 
+  it("allows OGD_LOCAL_DIR when directory exists", () => {
+    const dir = tempDir();
+    const result = assertIngestAllowed({
+      CONFIRM_OGD_DOWNLOAD: "no",
+      OGD_LOCAL_DIR: dir,
+    });
+    expect(result.mode).toBe("local-dir");
+    expect(result.localDir).toBe(path.resolve(dir));
+  });
+
   it("requires OGD_DOWNLOAD_URL or DATA_GOV_IN_API_KEY when confirm=yes", () => {
     expect(() =>
       assertIngestAllowed({
         CONFIRM_OGD_DOWNLOAD: "yes",
         OGD_LOCAL_PATH: "",
+        OGD_LOCAL_DIR: "",
         OGD_DOWNLOAD_URL: "",
         DATA_GOV_IN_API_KEY: "",
       }),
@@ -80,6 +93,32 @@ describe("ingest gate", () => {
       OGD_DOWNLOAD_URL: "https://example.com/company-master.zip",
     });
     expect(result.mode).toBe("download");
+  });
+});
+
+describe("mergeParsedCompanies", () => {
+  it("dedupes CIN across files (first wins)", () => {
+    const a = parseCompaniesCsv(
+      [
+        "CIN,Company Name,Company Status",
+        "U72900KA2015PTC000001,ACME Private Limited,Active",
+        "U72900KA2016PTC000002,Beta Private Limited,Active",
+      ].join("\n"),
+    );
+    const b = parseCompaniesCsv(
+      [
+        "CIN,Company Name,Company Status",
+        "U72900KA2015PTC000001,ACME RENAMED Private Limited,Active",
+        "U72900MH2017PTC000003,Gamma Private Limited,Active",
+      ].join("\n"),
+    );
+    const merged = mergeParsedCompanies([a, b]);
+    expect(merged.fileCount).toBe(2);
+    expect(merged.rows).toHaveLength(3);
+    expect(merged.skippedCrossFileDupCin).toBe(1);
+    expect(merged.rows.find((r) => r.cin.endsWith("000001"))?.name).toBe(
+      "ACME Private Limited",
+    );
   });
 });
 

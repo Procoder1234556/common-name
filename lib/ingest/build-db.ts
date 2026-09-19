@@ -1,13 +1,17 @@
 /**
  * Build SQLite index into a temp file, then atomic replace.
- * Uses sql.js (same as runtime) for portability — better-sqlite3 native
- * can ACCESS_VIOLATION on some Windows hosts.
- * (BACKEND_STRUCTURE.md §12; Phase 4 — indexes + optional FTS5)
+ * Prefers better-sqlite3 (FTS5/BM25) via openDbForIngest when safe; else sql.js.
+ * (BACKEND_STRUCTURE.md §12; Phase 4+ — indexes + FTS5)
  */
 
 import fs from "node:fs";
 import path from "node:path";
-import { openDb, type CompanyInsert, type DatasetMetaInput } from "@/lib/db";
+import {
+  openDbForIngest,
+  type CompaniesDbDriver,
+  type CompanyInsert,
+  type DatasetMetaInput,
+} from "@/lib/db";
 
 export interface BuildIndexOptions {
   rows: CompanyInsert[];
@@ -21,6 +25,7 @@ export interface BuildIndexResult {
   bakPath: string | null;
   rowCount: number;
   ftsEnabled: boolean;
+  driver: CompaniesDbDriver;
 }
 
 /**
@@ -63,8 +68,9 @@ export async function buildCompaniesIndex(
     fs.unlinkSync(tmpPath);
   }
 
-  const db = await openDb(tmpPath);
+  const db = await openDbForIngest(tmpPath);
   let ftsEnabled = false;
+  const driver = db.driver;
   try {
     db.clearCompanies();
     db.insertCompanies(rows);
@@ -84,6 +90,7 @@ export async function buildCompaniesIndex(
     bakPath,
     rowCount: rows.length,
     ftsEnabled,
+    driver,
   };
 }
 

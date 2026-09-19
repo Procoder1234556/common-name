@@ -8,6 +8,7 @@ export {
   resolveArtifact,
   sha256File,
   selectCsvEntriesFromZip,
+  extractZipToCsvPaths,
   type ResolvedArtifact,
 } from "@/lib/ingest/artifact";
 export {
@@ -23,6 +24,10 @@ export {
   parseCompaniesCsv,
   type ParseCompaniesResult,
 } from "@/lib/ingest/parse-companies";
+export {
+  mergeParsedCompanies,
+  type MergeCompaniesResult,
+} from "@/lib/ingest/merge-rows";
 export {
   buildCompaniesIndex,
   atomicReplaceDb,

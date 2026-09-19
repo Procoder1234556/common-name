@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { Database, ExternalLink } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -26,6 +26,16 @@ interface FormError {
   message: string;
   field?: string;
   retryAfterSeconds?: number;
+}
+
+const indexCountFormatter = new Intl.NumberFormat("en-IN");
+
+function formatIndexScope(meta: CheckSuccessDto["meta"]): string {
+  const dateSuffix = meta.snapshotAt ? ` (${meta.snapshotAt})` : "";
+  if (meta.rowCount !== undefined) {
+    return `Index: ${indexCountFormatter.format(meta.rowCount)} companies · ${meta.snapshotLabel}${dateSuffix}`;
+  }
+  return `Snapshot ${meta.snapshotLabel}${dateSuffix}`;
 }
 
 function validateName(raw: string): string | null {
@@ -299,12 +309,21 @@ export function NameCheckForm() {
               message={result.signal.message}
             />
 
-            <p className="text-sm text-neutral-600">
-              Exact: {result.signal.exactCount} · Similar:{" "}
-              {result.signal.similarCount}
-              {" · "}
-              Snapshot {result.meta.snapshotLabel}
-              {result.meta.snapshotAt ? ` (${result.meta.snapshotAt})` : ""}
+            <p
+              className="flex flex-wrap items-center gap-x-1 gap-y-1 text-sm text-neutral-600"
+              data-testid="index-scope"
+            >
+              <Database
+                className="size-4 shrink-0"
+                aria-hidden
+                strokeWidth={2}
+              />
+              <span>
+                Exact: {result.signal.exactCount} · Similar:{" "}
+                {result.signal.similarCount}
+                {" · "}
+                {formatIndexScope(result.meta)}
+              </span>
             </p>
 
             <MatchList matches={result.matches} />
