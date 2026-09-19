@@ -4,7 +4,7 @@ Check proposed Indian company names against a **local Company Master snapshot** 
 
 ## Status
 
-**Phase 6 (MVP deploy):** Render Blueprint (`render.yaml`) + `GET /api/health`. Staging build bakes fixture SQLite (`pnpm db:fixture`) — **no** OGD download and **no** MCA scrape in deploy scripts. Full network OGD still needs `CONFIRM_OGD_DOWNLOAD=yes` **and** `OGD_DOWNLOAD_URL` (or supply `OGD_LOCAL_PATH`).
+**Phase 6 live:** https://common-name.onrender.com — `GET /api/health` ready (fixture index). Render Blueprint (`render.yaml`) bakes `pnpm db:fixture` only — **no** OGD download / **no** MCA scrape in deploy. Full network OGD still needs `CONFIRM_OGD_DOWNLOAD=yes` **and** `OGD_DOWNLOAD_URL` (or `OGD_LOCAL_PATH`). Set `NEXT_PUBLIC_APP_URL=https://common-name.onrender.com` in Render if not already.
 
 ## Prerequisites
 
