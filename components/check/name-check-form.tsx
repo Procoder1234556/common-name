@@ -309,16 +309,26 @@ export function NameCheckForm() {
 
             <MatchList matches={result.matches} />
 
-            <p className="text-sm leading-relaxed text-neutral-600">
-              {result.disclaimer}
-            </p>
+            <aside
+              className="rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3"
+              aria-label="Disclaimer"
+            >
+              <p className="text-sm leading-relaxed text-neutral-700">
+                {result.disclaimer}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+                This tool never calls the live MCA website. Cache and SQLite
+                results are from our OGD snapshot only — MCA remains the
+                authority for reservation and filing.
+              </p>
+            </aside>
 
             <a
               href={result.links.mcaVerify}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="mca-verify-link"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-neutral-100 px-4 py-2.5 font-medium text-neutral-900 transition-colors hover:bg-neutral-200 focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="bg-primary-500 hover:bg-primary-600 focus-visible:ring-primary-500 inline-flex min-h-12 w-full cursor-pointer touch-manipulation items-center justify-center gap-2 rounded-lg px-4 py-3 text-base font-medium text-white transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:w-auto"
             >
               Verify on MCA (official)
               <ExternalLink className="size-4" aria-hidden strokeWidth={2} />

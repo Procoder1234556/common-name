@@ -10,8 +10,9 @@ RUN pnpm install --frozen-lockfile
 FROM deps AS build
 WORKDIR /app
 COPY . .
-# Bake fixture index into image — never download OGD / never scrape MCA in build
-RUN pnpm db:fixture && pnpm build
+# Build only — never download OGD / never scrape MCA in image build.
+# Production SQLite lives on Render disk (/var/data) after gated ingest.
+RUN pnpm build
 
 FROM node:22.14-bookworm-slim AS runner
 WORKDIR /app

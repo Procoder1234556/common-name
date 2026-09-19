@@ -30,7 +30,7 @@ export const MATCH_LIMIT = 20;
 export const MIN_TOKEN_LENGTH = 3;
 
 export const DISCLAIMER =
-  "This is a snapshot uniqueness signal. MCA live search and SPICe+ approval are authoritative.";
+  "This is a snapshot uniqueness signal from MCA Company Master open data. MCA live search and SPICe+ approval are authoritative — this server never fetches the MCA website.";
 
 export interface RankedMatch {
   cin: string;
@@ -325,14 +325,15 @@ export function buildSignal(
   if (similarCount >= 1) {
     return {
       code: "SIMILAR",
-      message: `${similarCount} similar names exist — review carefully`,
+      message: `${similarCount} similar name${similarCount === 1 ? "" : "s"} in snapshot — review carefully, then verify on MCA`,
       exactCount,
       similarCount,
     };
   }
   return {
     code: "LIKELY_UNIQUE",
-    message: "0 matches — likely unique in snapshot",
+    message:
+      "0 matches in our OGD snapshot — still verify on MCA before filing",
     exactCount: 0,
     similarCount: 0,
   };

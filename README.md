@@ -4,7 +4,7 @@ Check proposed Indian company names against a **local Company Master snapshot** 
 
 ## Status
 
-**Phase 6 live:** https://common-name.onrender.com — `GET /api/health` ready (fixture index). Render Blueprint (`render.yaml`) bakes `pnpm db:fixture` only — **no** OGD download / **no** MCA scrape in deploy. Full network OGD still needs `CONFIRM_OGD_DOWNLOAD=yes` **and** `OGD_DOWNLOAD_URL` (or `OGD_LOCAL_PATH`). Set `NEXT_PUBLIC_APP_URL=https://common-name.onrender.com` in Render if not already.
+**Phase 6+:** https://common-name.onrender.com — 404 page, mobile touch targets, stronger disclaimer. Check path: response cache → OGD SQLite → MCA deep-link (never server-fetch MCA). Local OGD ingest: Goa Company Master CSV (**7,353** real names, Mar 2015). Full nationwide dump needs browser login + state “Preview & Download” on [data.gov.in](https://www.data.gov.in/resource/registrars-companies-roc-wise-company-master-data). `render.yaml`: starter + `/var/data` disk; **no** fixture bake / **no** MCA scrape.
 
 ## Prerequisites
 

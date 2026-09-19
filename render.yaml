@@ -1,19 +1,21 @@
-# Common Name — Render Blueprint (Phase 6)
-# https://render.com/docs/blueprint-spec
-#
-# Staging: build bakes fixture SQLite (no OGD download / no MCA scrape).
-# Production OGD: attach a disk, set COMPANIES_DB_PATH to the mount, run
-# gated `pnpm db:ingest` offline, then redeploy — keep companies.sqlite.bak.
+# Common Name — Render Blueprint (Phase 6+)
+# Paid plan + persistent disk for OGD SQLite (Context7: free has no disks).
+# Build never scrapes MCA; never downloads OGD without operator gate.
+# Place companies.sqlite on /var/data after gated ingest (keep .bak).
 
 services:
   - type: web
     name: common-name
     runtime: node
-    plan: free
+    plan: starter
     region: oregon
     healthCheckPath: /api/health
-    buildCommand: HUSKY=0 pnpm install --frozen-lockfile && pnpm db:fixture && pnpm build
+    buildCommand: HUSKY=0 pnpm install --frozen-lockfile && pnpm build
     startCommand: pnpm start
+    disk:
+      name: company-index
+      mountPath: /var/data
+      sizeGB: 10
     envVars:
       - key: NODE_VERSION
         value: "22.14.0"
@@ -24,7 +26,7 @@ services:
       - key: COMPANIES_DB_DRIVER
         value: sqljs
       - key: COMPANIES_DB_PATH
-        value: ./data/companies.sqlite
+        value: /var/data/companies.sqlite
       - key: RATE_LIMIT_WINDOW_MS
         value: "900000"
       - key: RATE_LIMIT_MAX
@@ -34,4 +36,4 @@ services:
       - key: NEXT_PUBLIC_OGD_CATALOG_URL
         value: https://data.gov.in/catalog/company-master-data
       - key: NEXT_PUBLIC_APP_URL
-        sync: false
+        value: https://common-name.onrender.com

@@ -129,6 +129,15 @@ export async function POST(request: NextRequest) {
   try {
     const cached = getCachedCheck(normalizedPreview);
     if (cached) {
+      console.info(
+        JSON.stringify({
+          level: "info",
+          code: "CHECK_CACHE_HIT",
+          latencyMs: Date.now() - started,
+          normalizedLength: cached.query.normalized.length,
+          signal: cached.signal.code,
+        }),
+      );
       return successJson({
         ...cached,
         query: { raw: rawName, normalized: cached.query.normalized },

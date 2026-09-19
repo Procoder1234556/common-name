@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, Source_Sans_3 } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import {
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  SITE_TAGLINE,
+  absoluteUrl,
+  getSiteUrl,
+} from "@/lib/seo/site";
 
 const fontDisplay = Fraunces({
   subsets: ["latin"],
@@ -23,12 +31,48 @@ const fontMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "Common Name",
-    template: "%s · Common Name",
+    default: `${SITE_NAME} — Indian company name uniqueness check`,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "Check proposed Indian company names against an official Company Master snapshot. Not a substitute for MCA filing.",
+  description: SITE_DESCRIPTION,
+  keywords: [...SITE_KEYWORDS],
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "business",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: absoluteUrl("/"),
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  other: {
+    "ai-content": "human-authored product utility documentation",
+  },
 };
 
 export default function RootLayout({
@@ -38,7 +82,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="en-IN"
       className={`${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable} h-full`}
     >
       <body className="flex min-h-full flex-col">
@@ -54,7 +98,7 @@ export default function RootLayout({
               href="/"
               className="font-display hover:text-primary-700 text-lg font-semibold tracking-tight text-neutral-900 transition-colors"
             >
-              Common Name
+              {SITE_NAME}
             </Link>
             <nav aria-label="Primary">
               <Link
@@ -67,15 +111,16 @@ export default function RootLayout({
           </div>
         </header>
         <div className="flex flex-1 flex-col">{children}</div>
-        <footer className="border-t border-neutral-200/80 py-6 text-center text-sm text-neutral-600">
-          <p>
-            Snapshot signal only. Always verify on{" "}
+        <footer className="border-t border-neutral-200/80 px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center text-sm text-neutral-600 sm:px-6">
+          <p className="mx-auto max-w-prose leading-relaxed">
+            Disclaimer: snapshot uniqueness signal from MCA Company Master open
+            data — not SPICe+ approval. Always verify on{" "}
             <a
               href={
                 process.env.NEXT_PUBLIC_MCA_VERIFY_URL ??
                 "https://www.mca.gov.in/"
               }
-              className="text-primary-700 font-medium underline-offset-2 hover:underline"
+              className="text-primary-700 cursor-pointer font-medium underline-offset-2 hover:underline"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -84,7 +129,7 @@ export default function RootLayout({
             .{" "}
             <Link
               href="/about"
-              className="text-primary-700 font-medium underline-offset-2 hover:underline"
+              className="text-primary-700 cursor-pointer font-medium underline-offset-2 hover:underline"
             >
               How it works
             </Link>
