@@ -68,14 +68,14 @@ Schema matches [BACKEND_STRUCTURE.md](BACKEND_STRUCTURE.md). Runtime uses **sql.
 
 ### Staging (fixtures)
 
-1. Push this repo to GitHub/GitLab/Bitbucket
-2. Open Blueprint: `https://dashboard.render.com/blueprint/new?repo=<YOUR_HTTPS_REPO_URL>`
+1. Push this repo to GitHub/GitLab/Bitbucket (done: https://github.com/Procoder1234556/common-name)
+2. Open Blueprint: [Apply on Render](https://dashboard.render.com/blueprint/new?repo=https://github.com/Procoder1234556/common-name)
 3. Apply `render.yaml` — build runs `pnpm db:fixture && pnpm build` only (no scrape jobs)
 4. Set `NEXT_PUBLIC_APP_URL` to the HTTPS service URL after first deploy
 5. Keep `CONFIRM_OGD_DOWNLOAD=no` on the server
 6. Smoke: `GET /api/health` → `ok: true`; `POST /api/check`; UI shows snapshot + disclaimer
 
-Bind: `pnpm start` uses host `0.0.0.0`; Render injects `PORT`.
+Connect GitHub to Render if Dashboard asks (Account → Linked Accounts). Bind: `pnpm start` uses host `0.0.0.0`; Render injects `PORT`.
 
 ### Production (confirmed index)
 
