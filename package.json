@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "tsx scripts/maybe-bake-ogd.ts && next build",
     "start": "tsx scripts/ensure-db-seed.ts && next start -H 0.0.0.0",
     "deploy:prepare": "pnpm db:ogd-goa && pnpm db:seed-artifact && pnpm build",
     "db:ogd-goa": "tsx scripts/ingest-ogd-goa.ts",
